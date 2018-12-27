@@ -73,8 +73,6 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public PageResult search(Integer pageNum, Integer pageSize, Brand brand) {
-
-
         //分页插件
         PageHelper.startPage(pageNum,pageSize );
         //创建品牌条件对象
