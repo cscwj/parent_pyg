@@ -3,6 +3,7 @@ package cn.itcast.core.controller;
 
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.order.Order;
+import cn.itcast.core.pojo.seller.Seller;
 import cn.itcast.core.service.OrderService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import entity.PageResult;
@@ -53,5 +54,10 @@ public class OrderController {
             e.printStackTrace();
             return new Result(false,"更改订单失败");
         }
+    }
+
+    @RequestMapping("/findSellerList")
+    public List<Seller> findSellerList(){
+        return orderService.findSellerList();
     }
 }

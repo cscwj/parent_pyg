@@ -31,4 +31,8 @@ app.service("orderService",function($http){
 	this.selectOptionList = function(){
 		return $http.get("../brand/selectOptionList.do");
 	}
+
+	this.findSellerList = function () {
+		return $http.get("../order/findSellerList.do")
+    }
 });

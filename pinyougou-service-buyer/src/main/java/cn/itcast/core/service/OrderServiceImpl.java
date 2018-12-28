@@ -5,6 +5,7 @@ import cn.itcast.core.mapper.item.ItemDao;
 import cn.itcast.core.mapper.log.PayLogDao;
 import cn.itcast.core.mapper.order.OrderDao;
 import cn.itcast.core.mapper.order.OrderItemDao;
+import cn.itcast.core.mapper.seller.SellerDao;
 import cn.itcast.core.pojo.Cart;
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.good.GoodsQuery;
@@ -14,6 +15,7 @@ import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
+import cn.itcast.core.pojo.seller.Seller;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -43,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private PayLogDao payLogDao;   //订单日志表,合并每个商家的订单
 
+    @Autowired
+    private SellerDao sellerDao;
     @Override
     public void add(Order order) {
         //cart只存在商家id,库存id,购买数量
@@ -216,6 +220,11 @@ public class OrderServiceImpl implements OrderService {
         for (OrderItem orderItem : orderVo.getOrderItems()) {
             orderItemDao.insertSelective(orderItem);
         }
+    }
+
+    @Override
+    public List<Seller> findSellerList() {
+        return sellerDao.selectByExample(null);
     }
 
 }

@@ -72,5 +72,15 @@ app.controller("orderController",function($scope,$controller,$http,orderService)
 
 		});
 	}
+    $scope.findSellerList = function(){
+        // 向后台发送请求获取数据:
+        orderService.findSellerList().success(function(response){
+            $scope.sellerList = response;
+
+        });
+    }
+    // 路径配置
+
+
 	
 });
