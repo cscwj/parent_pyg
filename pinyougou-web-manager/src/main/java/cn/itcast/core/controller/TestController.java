@@ -21,4 +21,8 @@ public class TestController {
     Long aLong = new Long("123456789012345678");
     return new BigDecimal(aLong);
   }
+  @RequestMapping("/getnum2")
+  public long getnum2(){
+    return 123456789012345678L;
+  }
 }

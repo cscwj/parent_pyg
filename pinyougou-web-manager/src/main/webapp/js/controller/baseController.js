@@ -55,5 +55,13 @@ app.controller("baseController",function($scope,$http){
         }
 		);
   }
-	
+
+  $scope.ttes2 = function () {
+    $http.get("../test/getnum2.do").success(
+    		function (response) {
+					$scope.aaaaa2=response;
+        }
+		);
+  }
+
 });
