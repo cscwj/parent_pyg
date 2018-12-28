@@ -6,13 +6,21 @@ import cn.itcast.core.mapper.log.PayLogDao;
 import cn.itcast.core.mapper.order.OrderDao;
 import cn.itcast.core.mapper.order.OrderItemDao;
 import cn.itcast.core.pojo.Cart;
+import cn.itcast.core.pojo.good.Goods;
+import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
+import cn.itcast.core.pojo.order.OrderItemQuery;
+import cn.itcast.core.pojo.order.OrderQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import pojogroup.OrderVo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -143,6 +151,68 @@ public class OrderServiceImpl implements OrderService {
             }
 
 
+        }
+    }
+
+    @Override
+    public PageResult search(Integer page, Integer rows, Order order) {
+        //分页插件
+        PageHelper.startPage(page, rows);
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+
+        //商家和运营商共用查询,运营商后台是查询所有,不带当前登录id
+        if (null != order.getSellerId() && !"".equals(order.getSellerId().trim())) {
+            //查询当前登录公司商品,id,controller获取
+            criteria.andSellerIdEqualTo(order.getSellerId().trim());
+        }
+        if (null != order.getOrderId()) {
+            criteria.andOrderIdEqualTo(order.getOrderId());
+        }
+
+        //状态查询,未审核,审核,审未通过,前台下拉框,如果不选择(全部),是''
+        if (null != order.getStatus() && !"".equals(order.getStatus())) {
+            criteria.andStatusEqualTo(order.getStatus());
+        }
+//        //名字模糊查询 angularjs会去掉前后端空串,但是前段校验不安全,后台也必须校验
+//        if (null != order.getGoodsName() && !"".equals(order.getGoodsName().trim())) {
+//            criteria.andGoodsNameLike("%" + order.getGoodsName() + "%");
+//        }
+        //只查询不删除的,为null表示未删除
+//        criteria.andIsDeleteIsNull();
+
+        Page<Order> p = (Page<Order>) orderDao.selectByExample(orderQuery);
+
+        List<Order> result = p.getResult();
+        for (Order order1 : result) {
+            System.out.println("++++ "+order1);
+        }
+        return new PageResult(p.getTotal(), p.getResult());
+
+    }
+
+    @Override
+    public OrderVo findOne(Long id) {
+        OrderVo orderVo = new OrderVo();
+        Order order = orderDao.selectByPrimaryKey(id);
+        OrderItemQuery orderItemQuery = new OrderItemQuery();
+        OrderItemQuery.Criteria criteria = orderItemQuery.createCriteria();
+        criteria.andOrderIdEqualTo(id);
+        List<OrderItem> orderItems = orderItemDao.selectByExample(orderItemQuery);
+        orderVo.setOrder(order);
+        orderVo.setOrderItems(orderItems);
+        return orderVo;
+    }
+
+    @Override
+    public void update(OrderVo orderVo) {
+        orderDao.updateByPrimaryKeySelective(orderVo.getOrder());
+        OrderItemQuery orderItemQuery = new OrderItemQuery();
+        OrderItemQuery.Criteria criteria = orderItemQuery.createCriteria();
+        criteria.andOrderIdEqualTo(orderVo.getOrder().getOrderId());
+        orderItemDao.deleteByExample(orderItemQuery);
+        for (OrderItem orderItem : orderVo.getOrderItems()) {
+            orderItemDao.insertSelective(orderItem);
         }
     }
 

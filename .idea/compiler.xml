@@ -21,5 +21,21 @@
         <module name="pinyougou-web-user" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="parent_pyg" target="1.8" />
+      <module name="pinyougou-common" target="1.8" />
+      <module name="pinyougou-dao" target="1.8" />
+      <module name="pinyougou-interface" target="1.8" />
+      <module name="pinyougou-pojo" target="1.8" />
+      <module name="pinyougou-service-buyer" target="1.8" />
+      <module name="pinyougou-service-page" target="1.8" />
+      <module name="pinyougou-service-search" target="1.8" />
+      <module name="pinyougou-service-sellergoods" target="1.8" />
+      <module name="pinyougou-service-user" target="1.8" />
+      <module name="pinyougou-web-manager" target="1.8" />
+      <module name="pinyougou-web-portal" target="1.8" />
+      <module name="pinyougou-web-shop" target="1.8" />
+      <module name="pinyougou-web-user" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
