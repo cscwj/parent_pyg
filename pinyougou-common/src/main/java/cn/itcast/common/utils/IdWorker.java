@@ -99,10 +99,13 @@ public class IdWorker {
                 | (datacenterId << datacenterIdShift)
                 | (workerId << workerIdShift) | sequence;
 
-        System.out.println(Long.valueOf(String.valueOf(nextId).substring(3)));
+//        System.out.println(Long.valueOf(String.valueOf(nextId).substring(3)));
 //        return nextId;
-        int index = String.valueOf(nextId).length() - 15 - 1;
-        return Long.valueOf(String.valueOf(nextId).substring(index));
+//        System.out.println(nextId);
+        int index = String.valueOf(nextId).length() - 15;
+        Long sub = Long.valueOf(String.valueOf(nextId).substring(index));
+//        System.out.println(sub);
+        return sub;
     }
 
     private long tilNextMillis(final long lastTimestamp) {
