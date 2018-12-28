@@ -99,7 +99,9 @@ public class IdWorker {
                 | (datacenterId << datacenterIdShift)
                 | (workerId << workerIdShift) | sequence;
 
-        return nextId;
+//        return nextId;
+        int index = String.valueOf(nextId).length() - 15 - 1;
+        return Long.valueOf(String.valueOf(nextId).substring(index));
     }
 
     private long tilNextMillis(final long lastTimestamp) {
