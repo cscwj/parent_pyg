@@ -1,4 +1,4 @@
-app.controller("baseController",function($scope){
+app.controller("baseController",function($scope,$http){
 	// 分页的配置的信息
 	$scope.paginationConf = {
 		 currentPage: 1, // 当前页数
@@ -47,5 +47,13 @@ app.controller("baseController",function($scope){
 		}
 		return value;
 	}
+
+  $scope.ttes = function () {
+    $http.get("../test/getnum.do").success(
+    		function (response) {
+					$scope.aaaaa=response;
+        }
+		);
+  }
 	
 });
