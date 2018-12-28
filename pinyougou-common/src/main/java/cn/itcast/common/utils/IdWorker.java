@@ -99,6 +99,7 @@ public class IdWorker {
                 | (datacenterId << datacenterIdShift)
                 | (workerId << workerIdShift) | sequence;
 
+        System.out.println(Long.valueOf(String.valueOf(nextId).substring(3)));
 //        return nextId;
         int index = String.valueOf(nextId).length() - 15 - 1;
         return Long.valueOf(String.valueOf(nextId).substring(index));

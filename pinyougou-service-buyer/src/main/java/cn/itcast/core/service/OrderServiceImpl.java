@@ -60,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
                 //1:保存订单表
                 //2:订单ID 分布式ID生成器
                 long orderId = idWorker.nextId();
+
                 order.setOrderId(orderId);
 
                 //合并商家id,到订单日志
@@ -128,6 +129,7 @@ public class OrderServiceImpl implements OrderService {
 
                 //1.支付订单号
                 long logId = idWorker.nextId();
+
                 payLog.setOutTradeNo(String.valueOf(logId));
                 //2.创建日期
                 payLog.setCreateTime(new Date());
