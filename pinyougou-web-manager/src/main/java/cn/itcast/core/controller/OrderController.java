@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import pojogroup.OrderVo;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -26,15 +29,7 @@ public class OrderController {
     @RequestMapping("/search")
     public PageResult search(Integer pageNum, Integer pageSize , @RequestBody Order order){
 
-            PageResult search = orderService.search(pageNum, pageSize, order);
-            List<Order> rows = search.getRows();
-            for (Order row : rows) {
-                System.out.println(row);
-            }
-        Field[] declaredFields = search.getRows().get(0).getClass().getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            System.out.println(declaredField+"="+declaredField.getGenericType());
-        }
+
             return orderService.search(pageNum,pageSize,order);
 
     }
@@ -60,4 +55,18 @@ public class OrderController {
     public List<Seller> findSellerList(){
         return orderService.findSellerList();
     }
+    @RequestMapping("/orderCount")
+    public Map<String,Object> orderCount(@RequestBody Order order){
+
+        Map<String, Object> stringObjectMap = orderService.orderCount(order);
+        String[] time = (String[]) stringObjectMap.get("time");
+        for (int i = 0; i < time.length ; i++) {
+            time[i] = "周一";
+        }
+        stringObjectMap.put("time",time);
+
+
+        return stringObjectMap;
+    }
+
 }

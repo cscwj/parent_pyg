@@ -25,9 +25,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import pojogroup.OrderVo;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -163,6 +163,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageResult search(Integer page, Integer rows, Order order) {
         //分页插件
+        System.out.println(order.getCreateTime());
         PageHelper.startPage(page, rows);
         OrderQuery orderQuery = new OrderQuery();
         OrderQuery.Criteria criteria = orderQuery.createCriteria();
@@ -186,13 +187,16 @@ public class OrderServiceImpl implements OrderService {
 //        }
         //只查询不删除的,为null表示未删除
 //        criteria.andIsDeleteIsNull();
+        if (null !=order.getCreateTime()){
+            Calendar c = Calendar.getInstance();
+            c.setTime(order.getCreateTime());
+            c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天
 
+            Date tomorrow = c.getTime();
+            criteria.andCreateTimeBetween(order.getCreateTime(),tomorrow);
+        }
         Page<Order> p = (Page<Order>) orderDao.selectByExample(orderQuery);
 
-        List<Order> result = p.getResult();
-        for (Order order1 : result) {
-            System.out.println("++++ "+order1);
-        }
         return new PageResult(p.getTotal(), p.getResult());
 
     }
@@ -225,6 +229,54 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Seller> findSellerList() {
         return sellerDao.selectByExample(null);
+    }
+
+    @Override
+    public Map<String, Object> orderCount(Order order) {
+        System.out.println(order.getCreateTime());
+        HashMap<String, Object> map = new HashMap<>();
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        criteria.andStatusEqualTo("1");
+        if (null != order.getSellerId() && !"".equals(order.getSellerId().trim())) {
+            //查询当前登录公司商品,id,controller获取
+            criteria.andSellerIdEqualTo(order.getSellerId().trim());
+        }
+        if (null != order.getUserId() && !"".equals(order.getUserId().trim())){
+            criteria.andUserIdEqualTo(order.getUserId().trim());
+        }
+        if (null != order.getCreateTime()){
+//          criteria.andCreateTimeBetween()
+            Calendar c = Calendar.getInstance();
+            c.setTime(order.getCreateTime());
+            c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天
+
+            Date tomorrow = c.getTime();
+            criteria.andCreateTimeBetween(order.getCreateTime(),tomorrow);
+        }
+        String[] strings = new String[7];
+        if (null == order.getCreateTime()){
+            for (int i = 7; i >0 ; i--) {
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                c.add(Calendar.DAY_OF_MONTH, -i);// 今天+1天
+
+                Date tomorrow = c.getTime();
+                SimpleDateFormat forDate = new SimpleDateFormat("yyyy-MM-dd");
+                String dateString = forDate.format(tomorrow);//格式化
+                strings[7-i]=dateString;
+            }
+        }
+        List<Order> orders = orderDao.selectByExample(orderQuery);
+        BigDecimal totalMoney = BigDecimal.valueOf(0);
+        for (Order order1 : orders) {
+            totalMoney = totalMoney.add(order1.getPayment());
+        }
+        map.put("totalCount",orders.size());
+        map.put("totalPay",totalMoney);
+        map.put("time",strings);
+        return map;
     }
 
 }

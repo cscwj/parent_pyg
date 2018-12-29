@@ -35,4 +35,7 @@ app.service("orderService",function($http){
 	this.findSellerList = function () {
 		return $http.get("../order/findSellerList.do")
     }
+    this.countOrder = function(searchEntity){
+		return $http.post("../order/orderCount.do",searchEntity);
+	}
 });

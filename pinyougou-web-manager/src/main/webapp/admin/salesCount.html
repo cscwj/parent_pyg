@@ -42,7 +42,8 @@
 </div>
 <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 <div  style="height:400px">
-	<div style="height:1400px">
+
+	<div style="height:1400px" ng-controller="sexChart">
 		<sexbar id="sexBarcharts" legend="legend"  data="data"></sexbar>
 		<div class="table-box">
 
@@ -51,7 +52,7 @@
 				<td>选择商家</td>
 				<table class="table table-bordered table-striped"  width="300px">
 					<td>
-						<select class="form-control" ng-model="entity.sellerId" ng-options="item.sellerId as item.nickName for item in sellerList"></select>
+						<select class="form-control" ng-model="item.sellerId" ng-options="item.sellerId as item.nickName for item in sellerList"></select>
 					</td>
 				</table>
 				<div class="box-tools pull-right">

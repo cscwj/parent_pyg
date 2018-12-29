@@ -6,6 +6,7 @@ import entity.PageResult;
 import pojogroup.OrderVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
     void add(Order order);
@@ -18,4 +19,5 @@ public interface OrderService {
 
     List<Seller> findSellerList();
 
+    Map<String,Object> orderCount(Order order);
 }

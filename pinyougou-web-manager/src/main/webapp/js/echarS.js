@@ -3,13 +3,16 @@ console.log("ceshi输出");
 
 app.controller('sexChart', function($scope,$controller,$http,orderService) {
     $controller('baseController',{$scope:$scope});
+
     $scope.findSellerList = function(){
         // 向后台发送请求获取数据:
         orderService.findSellerList().success(function(response){
             $scope.sellerList = response;
 
+
         });
     };
+    $scope.searchEntity={"sellerId":''};
     $scope.legend = ["男", "女"];
     // $scope.item = ['Jan', 'Feb', 'Mar', 'Apr', 'Mar', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     $scope.data = [
@@ -23,17 +26,20 @@ app.directive('sexbar', function() {
             id: "@",
             legend: "=",
             //item: "=",  
-            data: "="
+            data: "=",
+            entity: "@",
+            searchEntity: "="
         },
         restrict: 'E',
         template: '<div style="height:400px;"></div>',
         replace: true,
         link: function($scope, element, attrs, controller) {
             var a = [];
+
             var option = {
                 title : {
                     text: '订单情况',
-                    subtext:''
+                    subtext:$scope.searchEntity.sellerId
                 },
                 tooltip : {
                     trigger: 'axis'
