@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -112,6 +113,34 @@ public class ContentServiceImpl implements ContentService {
         //有 直接返回
         return contents;
 
+    }
+
+    /**
+     * 保存在线人数到缓存中
+     * @param lineCount
+     */
+    @Override
+    public void savecount(Integer lineCount) {
+        redisTemplate.boundValueOps("lineCount").set(lineCount);
+    }
+
+    /**
+     * 设置一段时间内用户登录次数 - - - > 活跃用户
+     */
+    Integer count = 1;
+    @Override
+    public void activeUser(String name) {
+        if (null==redisTemplate.boundHashOps("ActiveUser").get(name)){
+            //第一次登录
+            redisTemplate.boundHashOps("ActiveUser").put(name,count);
+        }else {
+            //
+            count = (Integer) redisTemplate.boundHashOps("ActiveUser").get(name);
+            count++;
+            redisTemplate.boundHashOps("ActiveUser").put(name,count);
+        }
+        //设置存活时间 7 天   - - > 测试用3分钟
+        redisTemplate.boundHashOps("ActiveUser").expire(7,TimeUnit.DAYS);
     }
 
 }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	                 http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 	
 	<http pattern="/css/**" security="none"></http>
@@ -19,6 +22,7 @@
         <!--处于上方不登录,和下方登录中间,可登可不登,匿名角色,避免获取用户名没有登录出现空指针-->
 		<!-- 匿名角色 IS_AUTHENTICATED_ANONYMOUSLY -->
 		<intercept-url pattern="/cart/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url> 
+		<intercept-url pattern="/content/savecount.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url>
 		<intercept-url pattern="/itemsearch/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url>
 
 
@@ -56,7 +60,7 @@
 	<beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">  
         <beans:property name="authenticationUserDetailsService">  
             <beans:bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">  
-                <beans:constructor-arg ref="userDetailsService" />  
+                <beans:constructor-arg ref="userDetailService" />
             </beans:bean>  
         </beans:property>  
         <beans:property name="serviceProperties" ref="serviceProperties"/>  
@@ -69,7 +73,7 @@
         <beans:property name="key" value="an_id_for_this_auth_provider_only"/> 
     </beans:bean>        
    		 <!-- 认证类 -->
-	<beans:bean id="userDetailsService" class="cn.itcast.core.service.UserDetailServiceImpl"/>  
+	<!--<beans:bean id="userDetailsService" class="cn.itcast.core.service.UserDetailServiceImpl"/>-->
 	
 	<!-- 认证过滤器 结束 -->
 	
@@ -83,7 +87,16 @@
             <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>  
         </beans:constructor-arg>  
         <beans:property name="filterProcessesUrl" value="/logout/cas"/>  
-    </beans:bean>  
-    <!-- 单点登出  结束 -->  
-	
+    </beans:bean>
+    <!-- 引用dubbo 服务 -->
+    <dubbo:application name="pinyougou-portal-web" />
+    <dubbo:registry address="zookeeper://192.168.200.128:2181"/>
+    <dubbo:reference id="contentService"  interface="cn.itcast.core.service.ContentService" >
+    </dubbo:reference>
+
+    <!-- 配置自定义的认证类 -->
+    <beans:bean id="userDetailService" class="cn.itcast.core.service.UserDetailServiceImpl">
+        <!--set 方式注入-->
+        <beans:property name="contentService" ref="contentService"></beans:property>
+    </beans:bean>
 </beans:beans>
