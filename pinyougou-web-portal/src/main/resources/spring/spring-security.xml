@@ -15,7 +15,8 @@
 	<http pattern="/index.html" security="none"></http>
 	<http pattern="/search.html" security="none"></http>
  	<http pattern="/cart.html" security="none"></http>
-    	
+ 	<!--<http pattern="http://localhost:9104/register.html" security="none"></http>-->
+
 	<!--   entry-point-ref  入口点引用 -->
 	<http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">
 
