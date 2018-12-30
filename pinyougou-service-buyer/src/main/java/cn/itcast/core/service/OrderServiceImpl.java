@@ -1,27 +1,34 @@
 package cn.itcast.core.service;
 
 import cn.itcast.common.utils.IdWorker;
+import cn.itcast.core.mapper.good.GoodsDao;
+import cn.itcast.core.mapper.item.ItemCatDao;
 import cn.itcast.core.mapper.item.ItemDao;
 import cn.itcast.core.mapper.log.PayLogDao;
 import cn.itcast.core.mapper.order.OrderDao;
 import cn.itcast.core.mapper.order.OrderItemDao;
 import cn.itcast.core.mapper.seller.SellerDao;
+import cn.itcast.core.mapper.template.TypeTemplateDao;
 import cn.itcast.core.pojo.Cart;
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.Item;
+import cn.itcast.core.pojo.item.ItemCatQuery;
 import cn.itcast.core.pojo.log.PayLog;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.order.OrderQuery;
 import cn.itcast.core.pojo.seller.Seller;
+import cn.itcast.core.pojo.template.TypeTemplate;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import pojogroup.EchartsCircle;
+import pojogroup.EchartsDate;
 import pojogroup.OrderVo;
 
 import java.math.BigDecimal;
@@ -31,7 +38,10 @@ import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
+    @Autowired
+    private ItemCatDao itemCatDao;
+    @Autowired
+    private GoodsDao goodsDao;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -44,7 +54,8 @@ public class OrderServiceImpl implements OrderService {
     private ItemDao itemDao;
     @Autowired
     private PayLogDao payLogDao;   //订单日志表,合并每个商家的订单
-
+    @Autowired
+    private TypeTemplateDao typeTemplateDao;
     @Autowired
     private SellerDao sellerDao;
     @Override
@@ -276,6 +287,106 @@ public class OrderServiceImpl implements OrderService {
         map.put("totalCount",orders.size());
         map.put("totalPay",totalMoney);
         map.put("time",strings);
+        return map;
+    }
+
+    @Override
+    public List<String> findSellerName() {
+        ArrayList<String> names = new ArrayList<>();
+        List<Seller> sellers = sellerDao.selectByExample(null);
+        for (Seller seller : sellers) {
+            names.add(seller.getNickName());
+        }
+        return names;
+    }
+
+    @Override
+    public Map<String, Object> findEcharData(String sellerId) {
+        HashMap<String, Object> map = new HashMap<>();
+        ArrayList<List> data = new ArrayList<>();
+        List<EchartsDate> list = new ArrayList<>();
+        ArrayList<Integer> orderNumber = new ArrayList<>();
+        ArrayList<BigDecimal> totalMoney = new ArrayList<>();
+        OrderQuery orderQuery = new OrderQuery();
+        OrderQuery.Criteria criteria = orderQuery.createCriteria();
+        if (null!=sellerId && !"".equals(sellerId.trim())){
+            criteria.andSellerIdEqualTo(sellerId.trim());
+        }
+        String[] strings = new String[7];
+        for (int i = 7; i >0 ; i--) {
+            EchartsDate echartsDate = new EchartsDate();
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.DAY_OF_MONTH, -i);
+
+            Date currentTime = c.getTime();
+            SimpleDateFormat forDate = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = forDate.format(currentTime);//格式化
+            strings[7-i]=dateString;
+            echartsDate.setCurrentdate(dateString);
+            Calendar cc = Calendar.getInstance();
+            cc.setTime(currentTime);
+            cc.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天
+
+            Date tomorrow = cc.getTime();
+            OrderQuery orderQuery1 = new OrderQuery();
+            OrderQuery.Criteria criteria1 = orderQuery1.createCriteria();
+            criteria1.andCreateTimeBetween(currentTime,tomorrow);
+            List<Order> orders = orderDao.selectByExample(orderQuery1);
+            if (orders!=null && orders.size()>0){
+
+                orderNumber.add(orders.size());
+                echartsDate.setCount(orders.size());
+                BigDecimal orderMoney = BigDecimal.valueOf(0);
+                for (Order order : orders) {
+                    orderMoney = orderMoney.add(order.getPayment());
+                }
+                totalMoney.add(orderMoney);
+                echartsDate.setTotalmoney(orderMoney);
+            }else {
+                echartsDate.setCount(0);
+                orderNumber.add(0);
+                totalMoney.add(BigDecimal.valueOf(0));
+                echartsDate.setTotalmoney(BigDecimal.valueOf(0));
+            }
+            list.add(echartsDate);
+        }
+
+
+        map.put("time",strings);
+        data.add(orderNumber);
+        data.add(totalMoney);
+        map.put("echarData",data);
+        map.put("list",list);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> findEcharCircle() {
+        HashMap<String, Object> map = new HashMap<>();
+        ArrayList<EchartsCircle> list = new ArrayList<>();
+        List<TypeTemplate> typeTemplates = typeTemplateDao.selectByExample(null);
+        GoodsQuery goodsQuery = new GoodsQuery();
+        OrderItemQuery orderItemQuery = new OrderItemQuery();
+        OrderItemQuery.Criteria criteria1 = orderItemQuery.createCriteria();
+        OrderQuery orderQuery = new OrderQuery();
+        for (TypeTemplate typeTemplate : typeTemplates) {
+            int count = 0;
+            EchartsCircle echartsCircle = new EchartsCircle();
+            echartsCircle.setName(typeTemplate.getName());
+            GoodsQuery.Criteria criteria = goodsQuery.createCriteria();
+            criteria.andTypeTemplateIdEqualTo(typeTemplate.getId());
+            List<Goods> goods = goodsDao.selectByExample(goodsQuery);
+            for (Goods good : goods) {
+                criteria1.andGoodsIdEqualTo(good.getId());
+                int i = orderItemDao.countByExample(orderItemQuery);
+                count += i;
+
+            }
+            echartsCircle.setValue(count);
+            list.add(echartsCircle);
+        }
+        map.put("list",list);
         return map;
     }
 

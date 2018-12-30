@@ -69,4 +69,21 @@ public class OrderController {
         return stringObjectMap;
     }
 
+    @RequestMapping("/findSellerName")
+    public List<String> findSellerName(){
+       return orderService.findSellerName();
+    }
+
+    @RequestMapping("/findEcharData")
+    public Map<String,Object> findEcharData(String sellerId){
+        return orderService.findEcharData(sellerId);
+
+
+    }
+    @RequestMapping("/findEcharCircle")
+    public Map<String,Object> findEcharCircle(){
+        return orderService.findEcharCircle();
+    }
+
+
 }

@@ -80,118 +80,70 @@ app.controller("orderController",function($scope,$controller,$http,orderService)
         });
     }
     // 路径配置
-    $scope.time=[];
-    $scope.legend =[];
-    $scope.orderCount = {"time":[]};
+
+    $scope.time = [];
+    $scope.item = [];
   $scope.Count = function(){
 		orderService.countOrder($scope.searchEntity).success(function(response){
 			$scope.orderCount = response;
             $scope.time = response.time;
 		})
   }
-    $scope.legend = ['订单数','总金额'];
-	$scope.data= [
-        [10, 12, 21, 54, 260, 830, 710],
-        [30, 182, 434, 791, 390, 30, 10]
+    $scope.legend = ["销售额", "订单数"];
+    $scope.item =$scope.time;
+    $scope.data = [
+        [-1, 1, 3, 7, 13, 16, 18, 16, 15, 9, 4, 2],
+        [0, 1, 4, 7, 12, 15, 16, 15, 15, 10, 6, 5]
     ];
 
 });
-app.directive('sexbar', function() {
+app.directive('line', function() {
     return {
         scope: {
             id: "@",
             legend: "=",
-            //item: "=",
-            data: "=",
-            entity: "@",
-            searchEntity: "=",
-            time: "="
-
+            item: "=",
+            data: "="
         },
         restrict: 'E',
         template: '<div style="height:400px;"></div>',
         replace: true,
         link: function($scope, element, attrs, controller) {
-            var a = [];
-
             var option = {
-                title : {
-                    text: '订单情况',
-                    subtext:''
+                // 提示框，鼠标悬浮交互时的信息提示
+                tooltip: {
+                    show: true,
+                    trigger: 'item'
                 },
-                tooltip : {
-
-                     trigger: 'none'
-
-                },
+                // 图例
                 legend: {
-                    data:$scope.legend
+                    data: $scope.legend
                 },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        mark : {show: true},
-                        dataView : {show: true, readOnly: false},
-                        magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-                        restore : {show: true},
-                        saveAsImage : {show: true}
-                    }
-                },
-                calculable : true,
-
-
+                // 横轴坐标轴
                 xAxis: [{
                     type: 'category',
-
-                    data : $scope.time,
-                    axisLabel: {
-                        interval:0,
-                        rotate:40
-                    }
-
+                    data: $scope.item
                 }],
-
-                yAxis : [
-                    {
-                        type : 'value'
-                    }
-                ],
-                // series : [
-                //     {
-                //         name:'订单数',
-                //         type:'line',
-                //         smooth:true,
-                //         itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                //         data:[10, 12, 21, 54, 260, 830, 710]
-                //     },
-                //     {
-                //         name:'总金额',
-                //         type:'line',
-                //         smooth:true,
-                //         itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                //         data:[30, 182, 434, 791, 390, 30, 10]
-                //     }
-                // ],
-                series: function() {
-                    var serie = [];
-                    for (var i = 0; i < $scope.legend.length; i++) {
+                // 纵轴坐标轴
+                yAxis: [{
+                    type: 'value'
+                }],
+                // 数据内容数组
+                series: function(){
+                    var serie=[];
+                    for(var i=0;i<$scope.legend.length;i++){
                         var item = {
-                            name: $scope.legend[i],
+                            name : $scope.legend[i],
                             type: 'line',
-							smooth:true,
-							itemStyle: {normal: {areaStyle: {type: 'default'}}},
                             data: $scope.data[i]
                         };
                         serie.push(item);
                     }
                     return serie;
                 }()
-
             };
-
             var myChart = echarts.init(document.getElementById($scope.id),'macarons');
             myChart.setOption(option);
         }
-
     };
 });

@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-
+<!DOCTYPE html >
 <head>
-	<!-- 页面meta -->
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>商家审核</title>
-	<!-- Tell the browser to be responsive to screen width -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Echarts--柱状图与饼图</title>
 	<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
 	<link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
@@ -20,56 +16,117 @@
 	<!-- 引入分页相关的JS和CSS -->
 	<script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
 	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-
-	<script type="text/javascript" src="../js/base_pagination.js"></script>
-	<script type="text/javascript" src="../js/controller/baseController.js"></script>
 	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
 	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
-	<script type="text/javascript" src="../js/echarS.js"></script>
-	<script type="text/javascript" src="../js/controller/orderController.js"></script>
-	<script type="text/javascript" src="../js/service/orderService.js"></script>
+	<style>
+		html{
+			height:100%;
+		}
+
+	</style>
 </head>
 
-<body ng-app="pinyougou"  ng-controller="sexChart"  ng-init="findSellerList()">
-<div class="box box-primary">
-	<div class="box-header with-border">
-		<h3 class="box-title">销售额统计</h3>
-	</div>
-
-	<div class="box-body">
-	</div>
-		<!-- 数据表格 -->
-</div>
-<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<body >
 <div  style="height:400px">
 
-	<div style="height:1400px" ng-controller="sexChart">
-		<sexbar id="sexBarcharts" legend="legend"  data="data"></sexbar>
-		<div class="table-box">
+	<div id="main" style="width: 600px;height:400px;"></div>
+	<script type="text/javascript">
 
-			<!--工具栏-->
-			<div class="modal-body">
-				<td>选择商家</td>
-				<table class="table table-bordered table-striped"  width="300px">
-					<td>
-						<select class="form-control" ng-model="item.sellerId" ng-options="item.sellerId as item.nickName for item in sellerList"></select>
-					</td>
-				</table>
-				<div class="box-tools pull-right">
-					<div class="has-feedback">
-						<button class="btn btn-default" ng-click="reloadList()">今天</button>
-						<button class="btn btn-default" ng-click="reloadList()">昨天</button>
-						<button class="btn btn-default" ng-click="reloadList()">近七天</button>
-						<button class="btn btn-default" ng-click="reloadList()">近30天</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        var myChart = echarts.init(document.getElementById('main'));
+        // 显示标题，图例和空的坐标轴
+        myChart.setOption({
+            title : {
+                text: '某站点用户访问来源',
+                subtext: '纯属虚构',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:[]
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'商品类型',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[]
+                }
+            ]
+        });
+        myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+        var circle = [];
+        var times=[];    //类别数组（实际用来盛放X轴坐标值）
+        var evapCapacitys=[];    //销量数组（实际用来盛放Y坐标值）
+        var precipitations=[];
+        var leng = [];
+        $.ajax({
+            type : "post",
+            async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url : "../order/findEcharCircle.do",    //请求发送到TestServlet处
+            data : {},
+            dataType : "json",        //返回数据形式为json
+            success : function(result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    var circle = result.list;
+                    for(var i=0;i<circle.length;i++){
+                        leng.push(circle[i].name);
+                    }
 
+
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({        //加载数据图表
+                        legend: {
+                            data:leng
+                        },
+                        series: [{
+
+                            data: circle
+                        }
+                        ]
+                    });
+                }
+
+            },
+            error : function(errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+
+
+	</script>
 
 </div>
-
 </body>
 
 </html>

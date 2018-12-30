@@ -20,4 +20,11 @@ public interface OrderService {
     List<Seller> findSellerList();
 
     Map<String,Object> orderCount(Order order);
+
+    List<String> findSellerName();
+
+    Map<String,Object> findEcharData(String sellerId);
+
+    Map<String,Object> findEcharCircle();
+
 }
