@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- 页面meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>商家审核</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+	<!-- 引入angular的js -->
+	<script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+	<!-- 引入分页相关的JS和CSS -->
+	<script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+
+
+	<script type="text/javascript" src="../js/base_time.js"></script>
+	<script type="text/javascript" src="../js/controller/baseController.js"></script>
+	<script type="text/javascript" src="../js/controller/orderController.js"></script>
+	<script type="text/javascript" src="../js/service/orderService.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/wui.min.css">
+	<script type="text/javascript" src="../js/plugins/wui-date.js" charset="utf-8"></script>
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="orderController" ng-init="searchEntity={status:'0'}">
+<!-- .box-body -->
+<div class="box box-primary">
+	<div class="box-header with-border">
+		<h3 class="box-title">商家审核</h3>
+	</div>
+
+	<div class="box-body">
+
+		<!-- 数据表格 -->
+		<div class="table-box">
+
+			<!--工具栏-->
+
+			<div class="box-tools pull-right">
+				<div class="has-feedback">
+					订单ID：<input ng-model="searchEntity.orderId" >
+					时间：<wui-date
+						format="yyyy-mm-dd"
+						placeholder="请选择或输入日期"
+						id="date4"
+						btns="{'ok':'确定','now':'此刻'}"
+						ng-model="searchEntity.createTime"
+				>
+				</wui-date>
+
+
+					买家姓名： <input ng-model="searchEntity.userId" >
+					店铺名称： <input ng-model="searchEntity.sellerId" >
+					<br/>状态：
+					<input type="radio" value="" ng-model="searchEntity.status" />全部
+					<input type="radio" value="0" ng-model="searchEntity.status" />未付款
+					<input type="radio" value="1" ng-model="searchEntity.status" />已付款
+					<input type="radio" value="2" ng-model="searchEntity.status" />已完成
+					<input type="radio" value="3" ng-model="searchEntity.status" />关闭
+					<button class="btn btn-default" ng-click="reloadList()">查询</button>
+				</div>
+			</div>
+			<!--工具栏/-->
+
+			<!--数据列表-->
+			<table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+				<thead>
+				<tr >
+					<th class="" style="padding-right:0px">
+						<input id="selall" type="checkbox" class="icheckbox_square-blue">
+					</th>
+					<th class="sorting_asc">订单id</th>
+					<th class="sorting">付款方式</th>
+					<th class="sorting">店铺名称</th>
+					<th class="sorting">买家Id</th>
+					<th class="sorting">状态</th>
+					<th class="text-center">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="entity in list">
+					<td><input  type="checkbox"></td>
+
+					<td>{{entity.orderId}}</td>
+					<td>{{entity.paymentType}}</td>
+					<td>{{entity.sellerId}}</td>
+					<td>{{entity.userId}}</td>
+					<td>{{entity.status}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="findById(entity.orderId)" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#sellerModal" >详情</button>
+					</td>
+				</tr>
+
+				</tbody>
+			</table>
+			<!--数据列表/-->
+
+
+		</div>
+		<!-- 数据表格 /-->
+		<!-- 分页 -->
+		<tm-pagination conf="paginationConf"></tm-pagination>
+
+
+
+	</div>
+	<!-- /.box-body -->
+
+
+
+
+	<!-- 商家详情 -->
+	<div class="modal fade" id="sellerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 id="myModalLabel">商家详情</h3>
+				</div>
+				<div class="modal-body">
+
+
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#home" data-toggle="tab">基本信息</a></li>
+						<li><a href="#linkman" data-toggle="tab">详细信息</a></li>
+
+					</ul>
+
+					<!-- 选项卡开始 -->
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane active in" id="home">
+							<br>
+							<table class="table table-bordered table-striped"  width="800px">
+								<tr>
+									<td>收货人</td>
+									<td><input  class="form-control" placeholder="收货人" ng-model="entity.order.receiver">  </td>
+								</tr>
+								<tr>
+									<td>支付金额</td>
+									<td><input  class="form-control" placeholder="支付金额" ng-model="entity.order.payment">  </td>
+								</tr>
+								<tr>
+									<td>收货人电话</td>
+									<td><input  class="form-control" placeholder="电话" ng-model="entity.order.receiverMobile">  </td>
+								</tr>
+								<tr>
+									<td>收货地址</td>
+									<td><input  class="form-control" placeholder="收货地址" ng-model="entity.order.receiverAreaName">  </td>
+								</tr>
+								<tr>
+									<td>订单状态</td>
+									<td><input  class="form-control" placeholder="订单状态" ng-model="entity.order.status">  </td>
+								</tr>
+
+							</table>
+						</div>
+						<div class="tab-pane fade" id="linkman">
+							<br>
+							<table class="table table-bordered table-striped table-hover dataTable">
+								<thead>
+								<tr>
+
+
+									<th class="sorting">商品名称</th>
+									<th class="sorting">总价</th>
+									<th class="sorting">卖家ID</th>
+
+								</thead>
+								<tbody>
+								<tr ng-repeat="pojo in entity.orderItems">
+
+
+									<td>
+										<input ng-model="pojo.title" class="form-control" placeholder="商品名称">
+									</td>
+									<td>
+										<input ng-model="pojo.totalFee" class="form-control" placeholder="总价">
+									</td>
+									<td>
+										<input ng-model="pojo.sellerId" class="form-control" placeholder="卖家ID">
+									</td>
+
+								</tr>
+
+								</tbody>
+							</table>
+
+						</div>
+
+					</div>
+					<!-- 选项卡结束 -->
+
+
+				</div>
+				<div class="modal-footer">
+
+					<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" ng-click="update()">保存</button>
+					<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+
+</html>
