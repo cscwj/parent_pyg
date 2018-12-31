@@ -27,7 +27,9 @@ app.service("orderService",function($http){
 	this.search = function(page,rows,searchEntity){
 		return $http.post("../order/search.do?pageNum="+page+"&pageSize="+rows,searchEntity);
 	}
-	
+    this.search1 = function(page,rows,searchEntity){
+        return $http.post("../order/search.do?pageNum="+page+"&pageSize="+rows,searchEntity);
+    }
 	this.selectOptionList = function(){
 		return $http.get("../brand/selectOptionList.do");
 	}

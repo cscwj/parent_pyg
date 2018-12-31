@@ -30,11 +30,11 @@
 	<script type="text/javascript" src="../js/plugins/wui-date.js" charset="utf-8"></script>
 </head>
 
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="orderController" ng-init="searchEntity={status:'0'}">
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="orderController" ng-init="searchEntity={status:''}">
 <!-- .box-body -->
 <div class="box box-primary">
 	<div class="box-header with-border">
-		<h3 class="box-title">商家审核</h3>
+		<h3 class="box-title">订单查询</h3>
 	</div>
 
 	<div class="box-body">
@@ -65,7 +65,7 @@
 					<input type="radio" value="1" ng-model="searchEntity.status" />已付款
 					<input type="radio" value="2" ng-model="searchEntity.status" />已完成
 					<input type="radio" value="3" ng-model="searchEntity.status" />关闭
-					<button class="btn btn-default" ng-click="reloadList()">查询</button>
+					<button class="btn btn-default" ng-click="search1()">查询</button>
 				</div>
 			</div>
 			<!--工具栏/-->
@@ -209,7 +209,7 @@
 		</div>
 	</div>
 
-
+</div>
 </body>
 
 </html>
