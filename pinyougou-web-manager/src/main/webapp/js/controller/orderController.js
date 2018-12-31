@@ -1,5 +1,5 @@
 4// 定义控制器:
-app.controller("orderController",function($scope,$controller,$http,orderService){
+app.controller("orderController",function($scope,$controller,$location,$http,orderService){
 	// AngularJS中的继承:伪继承
 	$controller('baseController',{$scope:$scope});
 	
@@ -65,13 +65,36 @@ app.controller("orderController",function($scope,$controller,$http,orderService)
 	
 	// 假设定义一个查询的实体：searchEntity
 	$scope.search = function(page,rows){
+        var searchEntity = $location.search()['searchEntity'];
+        if(null==searchEntity){
+            //保存,这个方法是初始化,保存也跳转这个页面
+            orderService.search(page,rows,$scope.searchEntity).success(function(response){
+                $scope.paginationConf.totalItems = response.total;
+                $scope.list = response.rows;
+
+            });
+
+        }
+        // $scope.searchEntity
 		// 向后台发送请求获取数据:
-        orderService.search(page,rows,$scope.searchEntity).success(function(response){
+        orderService.search(page,rows,searchEntity).success(function(response){
 			$scope.paginationConf.totalItems = response.total;
 			$scope.list = response.rows;
 
 		});
 	}
+
+    $scope.search1 = function(){
+
+        // 向后台发送请求获取数据:
+        orderService.search1($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage,$scope.searchEntity).success(function(response){
+            $scope.paginationConf.totalItems = response.total;
+            $scope.list = response.rows;
+
+        });
+    }
+
+
     $scope.findSellerList = function(){
         // 向后台发送请求获取数据:
         orderService.findSellerList().success(function(response){

@@ -193,9 +193,9 @@ public class OrderServiceImpl implements OrderService {
             criteria.andStatusEqualTo(order.getStatus());
         }
 //        //名字模糊查询 angularjs会去掉前后端空串,但是前段校验不安全,后台也必须校验
-//        if (null != order.getGoodsName() && !"".equals(order.getGoodsName().trim())) {
-//            criteria.andGoodsNameLike("%" + order.getGoodsName() + "%");
-//        }
+        if (null != order.getUserId() && !"".equals(order.getUserId().trim())) {
+            criteria.andUserIdEqualTo(order.getUserId().trim());
+        }
         //只查询不删除的,为null表示未删除
 //        criteria.andIsDeleteIsNull();
         if (null !=order.getCreateTime()){
