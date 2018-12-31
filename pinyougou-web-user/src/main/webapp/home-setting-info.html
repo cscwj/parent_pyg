@@ -10,9 +10,13 @@
 
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-seckillOrder.css" />
+	<script type="text/javascript" src="plugins/angularjs/angular.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/service/loginService.js"></script>
+	<script type="text/javascript" src="js/controller/indexController.js"></script>
 </head>
 
-<body>
+<body ng-app="pinyougou" ng-controller="indexController" ng-init="showMessage()">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -208,7 +212,7 @@ $(function(){
                             <div id="one" class="tab-pane active">
                                 <form id="form-msg" class="sui-form form-horizontal">
                                     <div class="control-group">
-                                        <label for="inputName" class="control-label">昵称：</label>
+                                        <label for="inputName" class="control-label">昵称：{{user.nick_name}}</label>
                                         <div class="controls">
                                             <input type="text" id="inputName" name="email" placeholder="昵称">
                                         </div>
