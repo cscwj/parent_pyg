@@ -7,8 +7,18 @@ app.controller("contentController",function($scope,contentService){
 			$scope.contentList[categoryId] = response; //list<conterrt>
 		});
 	}
+    // 查询所有的品牌列表的方法:
+    $scope.savecount = function(){
+        // 向后台发送请求:
+        contentService.savecount().success(function(response){
+           // alert(response);
+        });
+    }
 	
 	//搜索  （传递参数）
+	$scope.search=function(){
+		location.href="http://localhost:9103/search.html#?keywords="+$scope.keywords;
+	}
 	$scope.search=function(){
 		location.href="http://localhost:9103/search.html#?keywords="+$scope.keywords;
 	}
