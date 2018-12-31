@@ -12,37 +12,71 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/upload")
 public class UploadController {
 
-    //解决,路径因编码问题,Springmvc.xml加载资源文件到内存,value写的资源文件的key值
-    @Value("${FILE_SERVER_URL}")
-    private String url;
+  //解决,路径因编码问题,Springmvc.xml加载资源文件到内存,value写的资源文件的key值
+  @Value("${FILE_SERVER_URL}")
+  private String url;
 
 
-    //Springmvc接收图片,MultipartFile是一个接口,是InputStreamSource的子类
-    //Springmvc.xml配置注入其实现类,才可以上传  formData.append("file",file.files[0]); file 根据前台对应
-    @RequestMapping("/uploadFile")
-    public Result uploadFile(MultipartFile file){
-        //原始名称
-        //file.getOriginalFilename() /dsfsafafads.jpg  png
-        //图片的二进制
-        //file.getBytes()
-        //.....
-        try {
-            //使用封装好的工具
-            FastDFSClient fastDFSClient = new FastDFSClient("classpath:fastDFS/fdfs_client.conf");
+  //Springmvc接收图片,MultipartFile是一个接口,是 InputStreamSource 的子类
+  //Springmvc.xml配置注入其实现类,才可以上传  formData.append("file",file.files[0]); file 根据前台对应
+  @RequestMapping("/uploadFile")
+  public Result uploadFile(MultipartFile file) {
+    //原始名称
+    //file.getOriginalFilename() /dsfsafafads.jpg  png
+    //图片的二进制
+    //file.getBytes()
+    //.....
+    try {
+      //使用封装好的工具
+      FastDFSClient fastDFSClient = new FastDFSClient("classpath:fastDFS/fdfs_client.conf");
 
-            //扩展名,apache提供切割 jpg,..
-            String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+      //扩展名,apache提供切割 jpg,..
+      String ext = FilenameUtils.getExtension(file.getOriginalFilename());
 
-            //工具类上传图片,提供多种重载方法,path只是不带域名的后段路径
-            //url外部引入,解决硬编码问题
-            String path = fastDFSClient.uploadFile(file.getBytes(), ext);
-            System.out.println(url+path);
+      //工具类上传图片,提供多种重载方法,path只是不带域名的后段路径
+      //url外部引入,解决硬编码问题
+      String path = fastDFSClient.uploadFile(file.getBytes(), ext);
+      System.out.println(url + path);
 
-            return new Result(true,url+path);
-        } catch (Exception e) {
-            return new Result(true,"上传失败");
-        }
-
+      return new Result(true, url + path);
+    } catch (Exception e) {
+      return new Result(false, "上传失败");
     }
+
+  }
+
+  //Springmvc接收图片,MultipartFile是一个接口,是InputStreamSource的子类
+  //Springmvc.xml配置注入其实现类,才可以上传  formData.append("file",file.files[0]); file 根据前台对应
+  @RequestMapping("/uploadExcel")
+  public Result uploadExcel(MultipartFile file) {
+    //原始名称
+    //file.getOriginalFilename() /dsfsafafads.jpg  png
+    //图片的二进制
+    //file.getBytes()
+    //.....
+    try {
+      //使用封装好的工具
+      FastDFSClient fastDFSClient = new FastDFSClient("classpath:fastDFS/fdfs_client.conf");
+
+      //扩展名,apache提供切割 jpg,..
+      String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+      if ("xlsx".equalsIgnoreCase(ext)) {
+        //工具类上传图片,提供多种重载方法,path只是不带域名的后段路径
+        //url外部引入,解决硬编码问题
+        String path = fastDFSClient.uploadFile(file.getBytes(), ext);
+        System.out.println(path);
+        System.out.println(url + path);
+
+        return new Result(true, url + path);
+      } else {
+        return new Result(false, "只支持[*.xlsx]文件!");
+      }
+
+
+    } catch (Exception e) {
+      return new Result(false, "上传失败");
+    }
+
+  }
 
 }

@@ -41,7 +41,7 @@ public class UploadController {
 
             return new Result(true,url+path);
         } catch (Exception e) {
-            return new Result(true,"上传失败");
+            return new Result(false,"上传失败");
         }
 
     }

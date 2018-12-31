@@ -21,7 +21,7 @@
 
     <!--spring与页面jion交互,底层用的jackjion,这里换成fastjson-->
     <mvc:annotation-driven>
-        <mvc:message-converters register-defaults="true">
+        <mvc:message-converters register-defaults="false">
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
                 <property name="supportedMediaTypes" value="application/json"/>
                 <property name="features">

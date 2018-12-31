@@ -14,4 +14,6 @@ public interface ItemCatService {
     void add(ItemCat itemCat);
 
     void update(ItemCat itemCat);
+
+  void insertAll(List<ItemCat> itemCatList);
 }

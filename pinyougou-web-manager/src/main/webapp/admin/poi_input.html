@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>管理</title>
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+  <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+  <!-- 分页组件开始 -->
+  <script src="../plugins/angularjs/pagination.js"></script>
+  <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+  <!-- 分页组件结束 -->
+
+  <script type="text/javascript" src="../js/base_pagination.js"></script>
+  <script type="text/javascript" src="../js/service/uploadService.js"></script>
+  <script type="text/javascript" src="../js/controller/baseController.js"></script>
+
+  <script type="text/javascript" src="../js/controller/poiController.js"></script>
+  <script type="text/javascript" src="../js/service/poiService.js"></script>
+
+
+</head>
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="poiController">
+<!-- .box-body -->
+<div class="box-header with-border">
+  <h3 class="box-title">导入管理</h3>
+</div>
+
+<div class="box-body">
+
+  <!-- 数据表格 -->
+  <div class="table-box">
+
+    <!--工具栏-->
+    <div class="pull-left">
+      <div class="form-group form-inline">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" title="导入" data-toggle="modal" data-target="#editModal"
+                  ng-click="t.type='0'"><i class="fa fa-file-o"></i> 导入
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--工具栏/-->
+
+  </div>
+  <!-- 数据表格 /-->
+</div>
+<!-- /.box-body -->
+
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">导入数据</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-striped" width="800px">
+
+          <tr>
+
+            <td><span>说明:</span></td>
+
+            <td><span>文件必须是[.xlsx]格式的文件,即2007版的Excel文件</span></td>
+
+          </tr>
+          <tr>
+
+            <td>数据表</td>
+
+            <td>
+              <!--工具栏-->
+
+
+              <div class="box-tools pull-right">
+                <div class="has-feedback">
+                  <input type="radio" value="0" ng-model="t.type"/>请选择 |
+                  <input type="radio" value="1" ng-model="t.type"/>品牌 |
+                  <input type="radio" value="2" ng-model="t.type"/>规格 |
+                  <input type="radio" value="3" ng-model="t.type"/>模板 |
+                  <input type="radio" value="4" ng-model="t.type"/>分类
+                  <!--<button class="btn btn-default" ng-click="show()">测试</button>-->
+                </div>
+              </div>
+              <!--工具栏/-->
+            </td>
+
+          </tr>
+          <tr>
+
+            <td>请选择文件</td>
+            <td>
+              <!--<span>[*.xlsx]文件的绝对路径</span>-->
+              <input type="file" id="file"/>
+              <input type="button" value="上传" ng-click="uploadFile()"/>
+            </td>
+
+          </tr>
+
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">保存</button>
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

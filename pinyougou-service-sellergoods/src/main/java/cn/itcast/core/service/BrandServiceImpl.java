@@ -101,4 +101,13 @@ public class BrandServiceImpl implements BrandService {
         //自己查询1,手动封装map
         return brandDao.selectOptionList();
     }
+
+  @Override
+  public void insertAll(List<Brand> brands) {
+    if(brands!=null&&brands.size()>0){
+        for (Brand brand : brands) {
+            brandDao.insertSelective(brand);
+        }
+    }
+  }
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>品牌管理</title>
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+  <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- 引入angular的js -->
+  <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+  <!-- 引入分页相关的JS和CSS -->
+  <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+  <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+
+  <script type="text/javascript" src="../js/base_pagination.js"></script>
+  <script type="text/javascript" src="../js/service/uploadService.js"></script>
+  <script type="text/javascript" src="../js/controller/baseController.js"></script>
+  <script type="text/javascript" src="../js/controller/poiController.js"></script>
+  <script type="text/javascript" src="../js/service/poiService.js"></script>
+
+</head>
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="poiController">
+<!--&lt;!&ndash;导出开始&ndash;&gt;<br/>-->
+<!--<button ng-click="userExToExcel()">导出用户Excel</button>-->
+<!--<button ng-click="goodsExToExcel()">导出商品Excel</button>-->
+<!--<button ng-click="orderExToExcel()">导出订单Excel</button>-->
+<!--&lt;!&ndash;导出结束&ndash;&gt;-->
+<!--<a href="http://localhost:9101/poi/order/aExcelOut.do">导出</a>-->
+
+
+<div class="box-header with-border">
+  <h3 class="box-title">导出管理</h3>
+</div>
+
+<div class="box-body">
+
+  <!-- 数据表格 -->
+  <div class="table-box">
+
+    <!--工具栏-->
+    <div class="pull-left">
+      <div class="form-group form-inline">
+        <!--导出开始-->
+        <div class="btn-group">
+          <a href="http://localhost:9101/poi/user/aExcelOut.do">
+            <button type="button" class="btn btn-default" title="导出用户Excel"><i class="fa fa-file-o"></i> 导出用户Excel
+            </button>
+          </a>
+
+          <a href="http://localhost:9101/poi/goods/aExcelOut.do">
+            <button type="button" class="btn btn-default" title="导出商品Excel"><i class="fa fa-file-o"></i> 导出商品Excel
+            </button>
+          </a>
+
+          <a href="http://localhost:9101/poi/order/aExcelOut.do">
+            <button type="button" class="btn btn-default" title="导出订单Excel"><i class="fa fa-file-o"></i> 导出订单Excel
+            </button>
+          </a>
+        </div>
+        <!--导出结束-->
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>

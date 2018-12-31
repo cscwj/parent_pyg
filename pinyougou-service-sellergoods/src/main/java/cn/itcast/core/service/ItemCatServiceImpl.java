@@ -1,6 +1,7 @@
 package cn.itcast.core.service;
 
 import cn.itcast.core.mapper.item.ItemCatDao;
+import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.pojo.item.ItemCatQuery;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -55,4 +56,13 @@ public class ItemCatServiceImpl implements ItemCatService {
     public void update(ItemCat itemCat) {
         itemCatDao.updateByPrimaryKeySelective(itemCat);
     }
+
+  @Override
+  public void insertAll(List<ItemCat> itemCatList) {
+      if(itemCatList!=null&&itemCatList.size()>0){
+          for (ItemCat itemCat : itemCatList) {
+              itemCatDao.insertSelective(itemCat);
+          }
+      }
+  }
 }
