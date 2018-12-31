@@ -101,4 +101,16 @@ public class BrandServiceImpl implements BrandService {
         //自己查询1,手动封装map
         return brandDao.selectOptionList();
     }
+
+    @Override
+    public void updateStatus(Long [] ids, Integer status) {
+        Brand brand = new Brand();
+        brand.setStatus(String.valueOf(status));
+        if (ids!=null&&ids.length>0){
+            for (Long id : ids) {
+                brand.setId(id);
+                brandDao.updateByPrimaryKeySelective(brand);
+            }
+        }
+    }
 }

@@ -78,14 +78,16 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}			
 		);
 	}
-	
+    $scope.parentId=0;
 	// 根据父ID查询分类
 	$scope.findByParentId =function(parentId){
 
         $scope.parentId=parentId;//记住上级ID,用于新建的使用
 
 		itemCatService.findByParentId(parentId).success(function(response){
+            $scope.parentId=parentId;
 			$scope.list=response;
+
 		});
 	}
 	
@@ -112,6 +114,20 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		
 		$scope.findByParentId(p_entity.id);
 	}
+    // 显示状态
+    $scope.status = ["未审核","审核通过","审核未通过"];
+    // 审核
+    $scope.updateStatus = function(status){
+        // 向后台发送请求获取数据:
+        itemCatService.updateStatus($scope.selectIds,status).success(function(response){
+            if(response.flag){
+                alert(response.message);
+                $scope.findByParentId($scope.parentId);
+            }else{
+                alert(response.message);
+            }
+        });
+    }
 	
 	
 	

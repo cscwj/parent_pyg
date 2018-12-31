@@ -17,6 +17,24 @@ public class Brand implements Serializable {
     private String firstChar;
 
     private Date birthday;
+    private String status;
+    private String sellerId;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
 
     private static final long serialVersionUID = 1L;
 

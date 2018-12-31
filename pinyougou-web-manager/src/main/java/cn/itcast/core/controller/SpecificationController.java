@@ -56,8 +56,33 @@ public class SpecificationController {
 
     //模板管理的加载规格
     @RequestMapping("selectOptionList")
-    public List<Map> selectOptionList(){
+    public List<Map> selectOptionList() {
         return specificationService.selectOptionList();
     }
 
+    @RequestMapping("/delete")
+    public Result delete(Long[] ids){
+        try {
+            specificationService.delete(ids);
+            return new Result(true,"删除成功");
+        } catch (Exception e) {
+            return new Result(false,"删除失败");
+        }
+
+    }
+
+    //更新状态   审核通过  或驳回
+    @RequestMapping("updateStatus")
+    public Result updateStatus(Long[] ids, Integer status) {
+        try {
+            specificationService.updateStatus(ids, status);
+            return new Result(true, "操作成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true, "操作失败!");
+        }
+    }
 }
+
+

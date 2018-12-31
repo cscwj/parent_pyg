@@ -86,10 +86,21 @@ public class BrandController {
 
     }
 
-    //模板管理的加载品牌数据
+
     @RequestMapping("selectOptionList")
     public List<Map> selectOptionList(){
         return brandService.selectOptionList();
+    } //模板管理的加载品牌数据
+    @RequestMapping("updateStatus")
+    public Result updateStatus(Long [] ids,Integer status ){
+        try {
+            brandService.updateStatus(ids,status);
+            return new Result(true,"操作成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true,"操作失败!");
+        }
     }
 
 

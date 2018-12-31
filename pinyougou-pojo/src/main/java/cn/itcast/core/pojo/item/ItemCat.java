@@ -23,6 +23,16 @@ public class ItemCat implements Serializable {
      */
     private Long typeId;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -100,5 +110,4 @@ public class ItemCat implements Serializable {
         result = prime * result + ((getTypeId() == null) ? 0 : getTypeId().hashCode());
         return result;
     }
-
 }

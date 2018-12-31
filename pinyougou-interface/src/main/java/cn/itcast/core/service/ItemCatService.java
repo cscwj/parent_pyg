@@ -14,4 +14,8 @@ public interface ItemCatService {
     void add(ItemCat itemCat);
 
     void update(ItemCat itemCat);
+
+    void updateStatus(Long[] ids, Integer status);
+
+    void delete(Long[] ids);
 }
