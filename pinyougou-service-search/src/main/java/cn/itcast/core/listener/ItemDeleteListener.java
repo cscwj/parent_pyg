@@ -11,7 +11,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-//运营商审核删除索引库
+//运营商审核删除索引库   实战附加:商家下架删除索引库
 public class ItemDeleteListener implements MessageListener {
     @Autowired
     private SolrTemplate solrTemplate;

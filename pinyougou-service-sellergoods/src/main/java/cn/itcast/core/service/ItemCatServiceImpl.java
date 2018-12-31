@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -66,3 +67,23 @@ public class ItemCatServiceImpl implements ItemCatService {
       }
   }
 }
+
+    @Override
+    public void updateStatus(Long[] ids, Integer status) {
+        ItemCat itemCat=new ItemCat();
+        itemCat.setStatus(String.valueOf(status));
+        for (Long id : ids) {
+            itemCat.setId(id);
+            itemCatDao.updateByPrimaryKeySelective(itemCat);
+        }
+    }
+    @Override
+    public void delete(Long[] ids) {
+        ItemCatQuery itemCatQuery = new ItemCatQuery();
+        //数组转集合 Arrays.asList(ids)                               andIdIn (adn id in )
+        //品牌条件对象,brandQuery.createCriteria()相当动态sql的where标签(删除第一个and) 后面跟的方法是条件and..and
+        itemCatQuery.createCriteria().andIdIn(Arrays.asList(ids));
+
+        itemCatDao.deleteByExample(itemCatQuery);
+    }
+    }

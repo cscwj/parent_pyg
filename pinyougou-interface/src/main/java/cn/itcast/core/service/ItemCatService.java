@@ -16,4 +16,8 @@ public interface ItemCatService {
     void update(ItemCat itemCat);
 
   void insertAll(List<ItemCat> itemCatList);
+
+    void updateStatus(Long[] ids, Integer status);
+
+    void delete(Long[] ids);
 }

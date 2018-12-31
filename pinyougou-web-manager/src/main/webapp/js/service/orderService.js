@@ -27,8 +27,17 @@ app.service("orderService",function($http){
 	this.search = function(page,rows,searchEntity){
 		return $http.post("../order/search.do?pageNum="+page+"&pageSize="+rows,searchEntity);
 	}
-	
+    this.search1 = function(page,rows,searchEntity){
+        return $http.post("../order/search.do?pageNum="+page+"&pageSize="+rows,searchEntity);
+    }
 	this.selectOptionList = function(){
 		return $http.get("../brand/selectOptionList.do");
+	}
+
+	this.findSellerList = function () {
+		return $http.get("../order/findSellerList.do")
+    }
+    this.countOrder = function(searchEntity){
+		return $http.post("../order/orderCount.do",searchEntity);
 	}
 });

@@ -246,7 +246,11 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	
 	// 显示状态
 	$scope.status = ["未审核","审核通过","审核未通过","关闭"];
-	
+
+
+	$scope.marketable = [null,"未上架","已上架"];
+								//1			2
+
 	$scope.itemCatList = [];
 	// 显示分类:
 	$scope.findItemCatList = function(){
@@ -256,4 +260,34 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 			}
 		});
 	}
+
+	//商家进行商品上架
+    $scope.upjia = function(){
+        goodsService.upjia($scope.selectIds).success(function(response){
+            if(response.flag){
+
+            	$scope.reloadList();//刷新列表
+                $scope.selectIds = [];
+                alert(response.message);
+            }else{
+                alert(response.message);
+            }
+        });
+    }
+
+    //商家进行商品下架
+    $scope.downjia = function(){
+        goodsService.downjia($scope.selectIds).success(function(response){
+            if(response.flag){
+
+                $scope.reloadList();//刷新列表
+                $scope.selectIds = [];
+                alert(response.message);
+            }else{
+                alert(response.message);
+            }
+        });
+    }
+
+
 });	

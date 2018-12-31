@@ -26,4 +26,6 @@ public interface BrandService {
     List<Map> selectOptionList();
 
   void insertAll(List<Brand> brands);
+
+    void updateStatus(Long[] ids, Integer status);
 }

@@ -13,6 +13,16 @@ public class Specification implements Serializable {
      */
     private String specName;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -68,4 +78,5 @@ public class Specification implements Serializable {
         result = prime * result + ((getSpecName() == null) ? 0 : getSpecName().hashCode());
         return result;
     }
+
 }

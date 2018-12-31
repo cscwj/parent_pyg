@@ -10,9 +10,17 @@
 
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-seckillOrder.css" />
+
+	<script type="text/javascript" src="plugins/angularjs/angular.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/service/loginService.js"></script>
+	<script type="text/javascript" src="js/controller/indexController.js"></script>
+	<script>
+
+	</script>
 </head>
 
-<body>
+<body ng-app="pinyougou" ng-controller="indexController" ng-init="findAddress();showName()">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -142,10 +150,12 @@ $(function(){
 <script type="text/javascript" src="js/plugins/sui/sui.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-placeholder/jquery.placeholder.min.js"></script>
 <script type="text/javascript" src="js/widget/nav.js"></script>
-<script type="text/javascript" src="pages/userInfo/distpicker.data.js"></script>
-<script type="text/javascript" src="pages/userInfo/distpicker.js"></script>
-<script type="text/javascript" src="pages/userInfo/main.js"></script>
-</body>
+<script type="text/javascript" src="js/plugins/birthday/birthday.js"></script>
+<script type="text/javascript" src="js/plugins/citypicker/distpicker.data.js"></script>
+<script type="text/javascript" src="js/plugins/citypicker/distpicker.js"></script>
+<script type="text/javascript" src="js/plugins/upload/uploadPreview.js"></script>
+<script type="text/javascript" src="js/pages/main.js"></script>
+
     <!--header-->
     <div id="account">
         <div class="py-container">
@@ -156,7 +166,7 @@ $(function(){
                     <div class="person-info">
                         <div class="person-photo"><img src="img/_/photo.png" alt=""></div>
                         <div class="person-account">
-                            <span class="name">Michelle</span>
+                            <span class="name">{{loginName}}</span>
                             <span class="safe">账户安全</span>
                         </div>
                         <div class="clearfix"></div>
@@ -205,26 +215,27 @@ $(function(){
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>刘田田</td>
-                                        <td>北京 北京市 海淀区 上地街道东北旺西路8号中关村软件园9号楼</td>
-                                        <td>1774***********4</td>
+                                    <tr ng-repeat="entity in Address">
+                                        <td>{{entity.contact}}</td>
+                                        <td>{{entity.address}}</td>
+                                        <td>{{entity.mobile}}</td>
                                         <td>
                                             <a href="#">编辑</a>
-                                            <a href="#">删除</a>
-                                            默认地址
+                                            <a href="javascript:;" ng-click="delete(entity.id)">删除</a>
+                                            <span ng-if="entity.isDefault=='1'">默认地址</span>
+											<a href="javascript:;" ng-click="setDefault(entity.id)" ng-if="entity.isDefault=='0'">设为默认</a>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>沈沉</td>
-                                        <td>北京 北京市 海淀区 上地街道东北旺西路8号中关村软件园9号楼</td>
-                                        <td>1774***********4</td>
-                                        <td>
-                                            <a href="#">编辑</a>
-                                            <a href="#">删除</a>
-                                            <a href="#">设为默认</a>
-                                        </td>
-                                    </tr>
+                                    <!--<tr>-->
+                                        <!--<td>沈沉</td>-->
+                                        <!--<td>北京 北京市 海淀区 上地街道东北旺西路8号中关村软件园9号楼</td>-->
+                                        <!--<td>1774***********4</td>-->
+                                        <!--<td>-->
+                                            <!--<a href="#">编辑</a>-->
+                                            <!--<a href="#">删除</a>-->
+                                            <!--<a href="#">设为默认</a>-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
                                     
                                 </tbody>
                             </table>                          
@@ -235,14 +246,14 @@ $(function(){
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×</button>
-                                        <h4 id="myModalLabel" class="modal-title">新增地址</h4>
+                                        <h4 id="myModalLabel" class="modal-title" >新增地址</h4>
                                     </div>
                                     <div class="modal-body">
                                         <form action="" class="sui-form form-horizontal">
                                             <div class="control-group">
                                             <label class="control-label">收货人：</label>
                                             <div class="controls">
-                                                <input type="text" class="input-medium">
+                                                <input type="text" class="input-medium" ng-model="entity.contact">
                                             </div>
                                         </div>
                                         <div class="control-group">
@@ -250,42 +261,49 @@ $(function(){
                                             <div class="controls">
                                                 <div data-toggle="distpicker">
                                                 <div class="form-group area">
-                                                    <select class="form-control" id="province1"></select>
+                                                    <select class="form-control" id="province1" ng-model="entity.provinceId">
+														<option selected="selected">{{entity.provinceId}}</option>
+													</select>
                                                 </div>
                                                 <div class="form-group area">
-                                                    <select class="form-control" id="city1"></select>
+                                                    <select class="form-control" id="city1" ng-model="entity.cityId">
+														<option selected="selected">{{entity.cityId}}</option>
+													</select>
+
                                                 </div>
                                                 <div class="form-group area">
-                                                    <select class="form-control" id="district1"></select>
+                                                    <select class="form-control" id="district1" ng-model="entity.townId">
+														<option selected="selected">{{entity.townId}}</option>
+													</select>
                                                 </div>
                                             </div>
-                                            </div>									 
+                                            </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">详细地址：</label>
                                             <div class="controls">
-                                                <input type="text" class="input-large">
+                                                <input type="text" class="input-large" ng-model="entity.address">
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <label class="control-label">联系电话：</label>
                                             <div class="controls">
-                                                <input type="text" class="input-medium">
+                                                <input type="text" class="input-medium" ng-model="entity.mobile">
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label">邮箱：</label>
-                                            <div class="controls">
-                                                <input type="text" class="input-medium">
-                                            </div>
-                                        </div>
+                                        <!--<div class="control-group">-->
+                                            <!--<label class="control-label">邮箱：</label>-->
+                                            <!--<div class="controls">-->
+                                                <!--<input type="text" class="input-medium">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <div class="control-group">
                                             <label class="control-label">地址别名：</label>
                                             <div class="controls">
-                                                <input type="text" class="input-medium">
+                                                <input type="text" class="input-medium" ng-model="entity.alias" id="alias">
                                             </div>
                                             <div class="othername">
-                                                建议填写常用地址：<a href="#" class="sui-btn btn-default">家里</a>　<a href="#" class="sui-btn btn-default">父母家</a>　<a href="#" class="sui-btn btn-default">公司</a>
+                                                建议填写常用地址：<a href="#" class="sui-btn btn-default" id="home">家里</a>　<a href="#" class="sui-btn btn-default" id="pHome">父母家</a>　<a href="#" class="sui-btn btn-default" id="company">公司</a>
                                             </div>
                                         </div>
                                         
@@ -294,7 +312,7 @@ $(function(){
                                         
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+                                        <button type="button" data-ok="modal" class="sui-btn btn-primary btn-large" ng-click="save()">确定</button>
                                         <button type="button" data-dismiss="modal" class="sui-btn btn-default btn-large">取消</button>
                                     </div>
                                 </div>
@@ -440,8 +458,44 @@ $(function(){
 </div>
 <!--页面底部END-->
 
+<script>
+
+	var home = document.getElementById("home");
+	var pHome = document.getElementById("pHome");
+	var company = document.getElementById("company");
+	var alias = document.getElementById("alias");
+	home.onclick=function(){
+	    alias.setAttribute("value","家里");
+	}
+    pHome.onclick=function(){
+        alias.setAttribute("value","父母家");
+    }
+    company.onclick=function(){
+        alias.setAttribute("value","公司");
+    }
+
+    var province1 = document.getElementById("province1");
+    province1.onchange=function(){
+        // alert(province1.find("option:selected").text());
+		var index = province1.selectedIndex;
+		//alert(province1[index].text);
+	}
+    var city1 = document.getElementById("city1");
+    city1.onchange=function(){
+        // alert(province1.find("option:selected").text());
+        var index = city1.selectedIndex;
+        //alert(city1[index].text);
+    }
+    var district1 = document.getElementById("district1");
+    district1.onchange=function(){
+        // alert(province1.find("option:selected").text());
+        var index = district1.selectedIndex;
+        //alert(district1[index].text);
+    }
 
 
-undefined
 
+</script>
+
+</body>
 </html>

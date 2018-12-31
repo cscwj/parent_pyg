@@ -62,5 +62,17 @@ public class ItemCatController {
     public List<ItemCat> findAll() {
         return itemCatService.findAll();
     }
+    //更新状态   审核通过  或驳回
+    @RequestMapping("updateStatus")
+    public Result updateStatus(Long[] ids, Integer status) {
+        try {
+            itemCatService.updateStatus(ids, status);
+            return new Result(true, "操作成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true, "操作失败!");
+        }
+    }
 
 }

@@ -110,4 +110,16 @@ public class BrandServiceImpl implements BrandService {
         }
     }
   }
+
+    @Override
+    public void updateStatus(Long [] ids, Integer status) {
+        Brand brand = new Brand();
+        brand.setStatus(String.valueOf(status));
+        if (ids!=null&&ids.length>0){
+            for (Long id : ids) {
+                brand.setId(id);
+                brandDao.updateByPrimaryKeySelective(brand);
+            }
+        }
+    }
 }

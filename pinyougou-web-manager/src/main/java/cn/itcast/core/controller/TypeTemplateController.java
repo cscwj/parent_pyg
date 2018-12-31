@@ -51,5 +51,17 @@ public class TypeTemplateController {
             return new Result(false,"修改失败");
         }
     }
+    //更新状态   审核通过  或驳回
+    @RequestMapping("updateStatus")
+    public Result updateStatus(Long[] ids, Integer status) {
+        try {
+            typeTemplateService.updateStatus(ids, status);
+            return new Result(true, "操作成功!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true, "操作失败!");
+        }
+    }
 }
 

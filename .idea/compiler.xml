@@ -19,6 +19,7 @@
         <module name="pinyougou-web-portal" />
         <module name="pinyougou-web-shop" />
         <module name="pinyougou-web-user" />
+        <module name="spring-solrutil" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -36,6 +37,8 @@
       <module name="pinyougou-web-portal" target="1.8" />
       <module name="pinyougou-web-shop" target="1.8" />
       <module name="pinyougou-web-user" target="1.8" />
+      <module name="spring-solrutil" target="1.5" />
+      <module name="springsolrutil" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
