@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import java.util.Map;
 
 //生成静态页面
 public class PageListener implements MessageListener {

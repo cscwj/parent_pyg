@@ -6,6 +6,7 @@
     <result column="parent_id" property="parentId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -67,7 +68,7 @@
   </sql>
   <sql id="Base_Column_List" >
     <if test="fields == null" >
-      id, parent_id, name, type_id
+      id, parent_id, name, type_id,status
     </if>
     <if test="fields != null" >
       ${fields}
@@ -89,7 +90,7 @@
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
-    id,parent_id,name,type_id
+    id,parent_id,name,type_id,status
     from tb_item_cat
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -137,6 +138,9 @@
       </if>
       <if test="typeId != null" >
         #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -186,7 +190,10 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="typeId != null" >
-        type_id = #{typeId,jdbcType=BIGINT},
+      type_id = #{typeId,jdbcType=BIGINT},
+    </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

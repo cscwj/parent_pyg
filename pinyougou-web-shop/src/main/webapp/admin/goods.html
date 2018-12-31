@@ -52,6 +52,9 @@
                                         <button type="button" class="btn btn-default" title="提交审核" ><i class="fa fa-check"></i> 提交审核</button>
                                         <button type="button" class="btn btn-default" title="屏蔽" onclick='confirm("你确认要屏蔽吗？")'><i class="fa fa-ban"></i> 屏蔽</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+
+                                        <button type="button" class="btn btn-default" title="上架" ng-click="upjia()"><i class="fa fa-check"></i> 上架</button>
+                                        <button type="button" class="btn btn-default" title="下架" ng-click="downjia()"><i class="fa fa-check"></i> 下架</button>
                                     </div>
                                 </div>
                             </div>
@@ -83,24 +86,32 @@
 									      <th class="sorting">一级分类</th>
 									      <th class="sorting">二级分类</th>
 									      <th class="sorting">三级分类</th>
-									      <th class="sorting">状态</th>									     						
+									      <th class="sorting">审核状态</th>
+									      <th class="sorting">上架状态</th>
 					                      <th class="text-center">操作</th>
 			                          </tr>
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox"></td>			                              
+			                              <td><input ng-click="updateSelection($event,entity.id)" type="checkbox"></td>
 				                          <td>{{entity.id}}</td>
 									      <td>{{entity.goodsName}}</td>
 									      <td>{{entity.price}}</td>
 									      <td>{{itemCatList[entity.category1Id]}}</td>
 									      <td>{{itemCatList[entity.category2Id]}}</td>
 									      <td>{{itemCatList[entity.category3Id]}}</td>
+
 		                                  <td>
 		                                  	<span>
 		                                  		{{status[entity.auditStatus]}}
 		                                  	</span>
-		                                  </td>		                                  
+		                                  </td>
+                                          <td>
+		                                  	<span>
+		                                  		{{marketable[entity.isMarketable]}}
+		                                  	</span>
+		                                  </td>
+
 		                                  <td class="text-center">
 		                                  	  <a class="btn bg-olive btn-xs" href="goods_edit.html#?id={{entity.id}}">修改</a>                                
 		                                  </td>
@@ -117,7 +128,8 @@
                         
                      </div>
                     <!-- /.box-body -->
-		
+	<hr/>
+{{selectIds}}
 </body>
 
 </html>

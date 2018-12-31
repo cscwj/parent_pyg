@@ -2,9 +2,14 @@ package cn.itcast.core.service;
 
 
 import cn.itcast.core.mapper.user.UserDao;
+import cn.itcast.core.pojo.good.Goods;
+import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -86,4 +91,6 @@ public class UserServiceImpl implements  UserService {
 //        User user = users.get(0);
 //        return user;
 //    }
+
+
 }

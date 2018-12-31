@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import pojogroup.SpecificationVo;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -105,5 +106,23 @@ public class SpecificationServiceImpl implements SpecificationService{
         return specificationDao.selectOptionList();
     }
 
+    @Override
+    public void updateStatus(Long[] ids, Integer status) {
+        Specification specification=new Specification();
+        specification.setStatus(String.valueOf(status));
+        for (Long id : ids) {
+            specification.setId(id);
+            specificationDao.updateByPrimaryKeySelective(specification);
+        }
+    }
 
+    @Override
+    public void delete(Long[] ids) {
+        SpecificationQuery specificationQuery = new SpecificationQuery();
+        //数组转集合 Arrays.asList(ids)                               andIdIn (adn id in )
+        //品牌条件对象,brandQuery.createCriteria()相当动态sql的where标签(删除第一个and) 后面跟的方法是条件and..and
+        specificationQuery.createCriteria().andIdIn(Arrays.asList(ids));
+
+        specificationDao.deleteByExample(specificationQuery);
+    }
 }

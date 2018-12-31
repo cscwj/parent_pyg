@@ -17,4 +17,8 @@ public interface GoodsService {
     void updateStatus(Long[] ids, String status);
 
     void delete(Long[] ids);
+
+    void upjia(Long[] ids);
+
+    void downjia(Long[] ids);
 }
