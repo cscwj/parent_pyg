@@ -14,7 +14,7 @@ import javax.jms.MessageListener;
 import java.util.List;
 
 
-//保存索引库
+//保存索引库   实战附加:商家上架保存索引库
 public class ItemSearchListener implements MessageListener {
 
     @Autowired

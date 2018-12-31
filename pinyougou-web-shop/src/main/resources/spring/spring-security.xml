@@ -70,7 +70,7 @@
 
 	<!-- 配置自定义的认证类  set注意,无法用自容器mvc的注解实例化-->
 	<beans:bean id="userDetailService" class="cn.itcast.core.service.UserDetailServiceImpl">
-		<beans:property name="sellerService" ref="sellerService"></beans:property>
+		<beans:property name="sellerService" ref="sellerService"/>
 	</beans:bean>
 
 	<!-- 当初  商家申请入驻时候的加载的类 -->

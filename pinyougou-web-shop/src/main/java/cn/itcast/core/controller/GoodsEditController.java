@@ -62,5 +62,29 @@ public class GoodsEditController {
         }
     }
 
+    //上架
+    @RequestMapping("/upjia")
+    public Result upjia(Long[] ids){
+
+        try {
+            goodsService.upjia(ids);
+            return new Result(true,"上架成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"所选商品中包含不符合要求商品");
+        }
+    }
+
+    //下架
+    @RequestMapping("/downjia")
+    public Result downjia(Long[] ids){
+        try {
+            goodsService.downjia(ids);
+            return new Result(true,"下架成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"所选商品中包含不符合要求商品");
+        }
+    }
 
 }

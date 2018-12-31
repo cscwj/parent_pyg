@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- 页面meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>商家审核</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+	<!-- 引入angular的js -->
+	<script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+	<!-- 引入分页相关的JS和CSS -->
+	<script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+	<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+	<script type="text/javascript" src="../js/base_pagination.js"></script>
+	<script type="text/javascript" src="../js/base_time.js"></script>
+	<!--<script type="text/javascript" src="../js/echarS.js"></script>-->
+	<script type="text/javascript" src="../js/controller/baseController.js"></script>
+	<script type="text/javascript" src="../js/controller/orderController.js"></script>
+	<script type="text/javascript" src="../js/service/orderService.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/wui.min.css">
+	<script type="text/javascript" src="../js/plugins/wui-date.js" charset="utf-8"></script>
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="orderController" ng-init="Count()">
+<!-- .box-body -->
+<div class="box box-primary">
+	<div class="box-header with-border">
+		<h3 class="box-title">订单统计</h3>
+	</div>
+
+	<div class="box-body">
+
+		<!-- 数据表格 -->
+		<div class="table-box">
+
+			<!--工具栏-->
+
+			<div class="box-tools pull-right">
+				<div class="has-feedback">
+					时间：<wui-date
+						format="yyyy-mm-dd"
+						placeholder="请选择或输入日期"
+						id="date4"
+						btns="{'ok':'确定','now':'此刻'}"
+						ng-model="searchEntity.createTime"
+				>
+				</wui-date>
+					用户Id： <input ng-model="searchEntity.userId" >
+					店铺名称： <input ng-model="searchEntity.sellerId" >
+
+					<button class="btn btn-default" ng-click="Count()">查询</button>
+				</div>
+			</div>
+			<!--工具栏/-->
+
+
+			<!--数据列表/-->
+
+
+		</div>
+		<!-- 数据表格 /-->
+		<!-- 分页 -->
+
+	</div>
+
+	</div>
+	<!-- /.box-body -->
+
+	<!--数据列表-->
+
+
+<section class="content">
+
+
+	<!-- 统计数值 -->
+	<div class="row">
+		<div class="col-lg-3 col-xs-6">
+			<!-- small box -->
+			<div class="small-box bg-aqua">
+				<div class="inner">
+					<h3>{{orderCount.totalCount}}</h3>
+
+					<p>总订单数</p>
+				</div>
+				<div class="icon">
+					<i class="ion ion-bag"></i>
+				</div>
+				<a href="all-order-manage-list.html" class="small-box-footer">详细 <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+		<!-- ./col -->
+		<div class="col-lg-3 col-xs-6">
+			<!-- small box -->
+			<div class="small-box bg-green">
+				<div class="inner">
+					<h3>{{orderCount.totalPay}}<sup style="font-size: 20px">元</sup></h3>
+
+					<p>网站成交额</p>
+				</div>
+				<div class="icon">
+					<i class="ion ion-stats-bars"></i>
+				</div>
+				<a href="all-ad-statistics-list.html" class="small-box-footer">详细 <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+		<!-- ./col -->
+		<div class="col-lg-3 col-xs-6">
+			<!-- small box -->
+			<div class="small-box bg-yellow">
+				<div class="inner">
+					<h3>44</h3>
+
+					<p>新注册用户</p>
+				</div>
+				<div class="icon">
+					<i class="ion ion-person-add"></i>
+				</div>
+				<a href="all-member-manage-list.html" class="small-box-footer">详细 <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+		<!-- ./col -->
+		<div class="col-lg-3 col-xs-6">
+			<!-- small box -->
+			<div class="small-box bg-red">
+				<div class="inner">
+					<h3>65</h3>
+
+					<p>日PV</p>
+				</div>
+				<div class="icon">
+					<i class="ion ion-pie-graph"></i>
+				</div>
+				<a href="all-ad-statistics-list.html" class="small-box-footer">详细 <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+		<!-- ./col -->
+	</div>
+	<!-- /.row -->
+</section>
+	<!-- 商家详情 -->
+<div class="box box-primary">
+
+
+	<div class="box-body">
+	</div>
+	<!-- 数据表格 -->
+</div>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div  style="height:400px">
+
+	<div id="main" style="width: 600px;height:400px;"></div>
+	<script type="text/javascript">
+
+        var myChart = echarts.init(document.getElementById('main'));
+        // 显示标题，图例和空的坐标轴
+        myChart.setOption({
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            title : {
+                text: '',
+                subtext: '纯属虚构'
+            },
+            tooltip: {
+                show: true,
+                trigger: 'item'
+            },
+            legend: {
+                data:[]
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : []
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series: [ {
+                name:'',
+                type:'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data:[]
+            },
+				{
+                name:'',
+                type:'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data:[]
+            }]
+        });
+        myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+		var list = [];
+        var times=[];    //类别数组（实际用来盛放X轴坐标值）
+        var evapCapacitys=[];    //销量数组（实际用来盛放Y坐标值）
+        var precipitations=[];
+        var leng = ['订单数','总金额'];
+        $.ajax({
+            type : "post",
+            async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url : "../order/findEcharData.do",    //请求发送到TestServlet处
+            data : {},
+            dataType : "json",        //返回数据形式为json
+            success : function(result) {
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    var list = result.list;
+                    for(var i=0;i<list.length;i++){
+                        times.push(list[i].currentdate);    //遍历月份并填入数组
+                    }
+                    for(var i=0;i<list.length;i++){
+                        evapCapacitys.push(list[i].count);
+                    }
+                    for(var i=0;i<list.length;i++){
+                        precipitations.push(list[i].totalmoney);
+                    }
+
+
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({        //加载数据图表
+                        legend: {
+                            data:leng
+                        },
+                        xAxis: {
+                            data: times
+                        },
+
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '订单数',
+                            showAllSymbol:true,
+                            data: evapCapacitys
+                        },
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '总金额',
+                                showAllSymbol:true,
+                                data: precipitations
+                            }
+                        ]
+                    });
+                }
+
+            },
+            error : function(errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+
+
+	</script>
+
+</div>
+<hr/>
+</body>
+
+</html>

@@ -30,7 +30,7 @@ public class Goods implements Serializable {
     private String auditStatus;
 
     /**
-     * 是否上架
+     * 是否上架  1 未上架  2已上架
      */
     private String isMarketable;
 
