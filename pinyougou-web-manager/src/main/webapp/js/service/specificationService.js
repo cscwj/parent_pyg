@@ -33,4 +33,8 @@ app.service('specificationService',function($http){
 	this.selectOptionList=function(){
 		return $http.get("../specification/selectOptionList.do");
 	}
+
+    this.updateStatus = function(ids,status){
+        return $http.get("../specification/updateStatus.do?ids="+ids+"&status="+status);
+    }
 });

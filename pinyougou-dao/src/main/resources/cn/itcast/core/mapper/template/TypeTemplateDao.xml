@@ -7,6 +7,7 @@
     <result column="spec_ids" property="specIds" jdbcType="VARCHAR" />
     <result column="brand_ids" property="brandIds" jdbcType="VARCHAR" />
     <result column="custom_attribute_items" property="customAttributeItems" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -68,7 +69,7 @@
   </sql>
   <sql id="Base_Column_List" >
     <if test="fields == null" >
-      id, name, spec_ids, brand_ids, custom_attribute_items
+      id, name, spec_ids, brand_ids, custom_attribute_items,status
     </if>
     <if test="fields != null" >
       ${fields}
@@ -201,6 +202,9 @@
       </if>
       <if test="customAttributeItems != null" >
         custom_attribute_items = #{customAttributeItems,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

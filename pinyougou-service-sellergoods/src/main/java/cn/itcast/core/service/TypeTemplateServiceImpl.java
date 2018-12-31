@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -105,5 +106,22 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         return listMap;
     }
 
+    @Override
+    public void updateStatus(Long[] ids, Integer status) {
+        TypeTemplate typeTemplate=new TypeTemplate();
+        typeTemplate.setStatus(String.valueOf(status));
+        for (Long id : ids) {
+            typeTemplate.setId(id);
+            typeTemplateDao.updateByPrimaryKeySelective(typeTemplate);
+        }
+    }
+    @Override
+    public void delete(Long[] ids) {
+        TypeTemplateQuery typeTemplateQuery = new TypeTemplateQuery();
+        //数组转集合 Arrays.asList(ids)                               andIdIn (adn id in )
+        //品牌条件对象,brandQuery.createCriteria()相当动态sql的where标签(删除第一个and) 后面跟的方法是条件and..and
+        typeTemplateQuery.createCriteria().andIdIn(Arrays.asList(ids));
 
+        typeTemplateDao.deleteByExample(typeTemplateQuery);
+    }
 }
