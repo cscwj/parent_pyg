@@ -20,4 +20,8 @@ public interface ContentService {
 	public void delAll(Long[] ids);
 
     List<Content> findByCategoryId(Long categoryId);
+
+    void savecount(Integer lineCount);
+
+    void activeUser(String name);
 }

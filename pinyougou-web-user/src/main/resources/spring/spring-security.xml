@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                     http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 	
 	<http pattern="/css/**" security="none"></http>
@@ -54,7 +57,7 @@
         <!--2.返回之后,向cas要用户名授权,引用自定义授权类-->
         <beans:property name="authenticationUserDetailsService">
             <beans:bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">  
-                <beans:constructor-arg ref="userDetailsService" />  
+                <beans:constructor-arg ref="userDetailService" />
             </beans:bean>  
         </beans:property>
 
@@ -70,10 +73,10 @@
     </beans:bean>
 
    		 <!-- 认证类 -->
-	<beans:bean id="userDetailsService" class="cn.itcast.core.service.UserDetailServiceImpl"/>
+	<!--<beans:bean id="userDetailsService" class="cn.itcast.core.service.UserDetailServiceImpl"/>-->
 	
 	<!-- 认证过滤器 结束 -->
-	
+
 	
 	<!-- 单点登出  开始  -->
     <!--清除本地session,下方过滤器清除cookie-->
@@ -87,6 +90,16 @@
         <!--这里设置按钮,就相当于上方一窜的登出地址,spring公司做了封装-->
         <beans:property name="filterProcessesUrl" value="/logout/cas"/>  
     </beans:bean>  
-    <!-- 单点登出  结束 -->  
-	
+    <!-- 单点登出  结束 -->
+    <!-- 引用dubbo 服务 -->
+    <dubbo:application name="pinyougou-user-web" />
+    <dubbo:registry address="zookeeper://192.168.200.128:2181"/>
+    <dubbo:reference id="contentService"  interface="cn.itcast.core.service.ContentService" >
+    </dubbo:reference>
+
+    <!-- 配置自定义的认证类 -->
+    <beans:bean id="userDetailService" class="cn.itcast.core.service.UserDetailServiceImpl">
+        <!--set 方式注入-->
+        <beans:property name="contentService" ref="contentService"></beans:property>
+    </beans:bean>
 </beans:beans>

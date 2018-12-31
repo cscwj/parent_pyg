@@ -171,9 +171,14 @@
 								</div>
 							</div>
 							<div class="fl">
-								<ul class="btn-choose unstyled">
-									<li>
-										<a  class="sui-btn  btn-danger addshopcar" ng-click="addToCart()">加入购物车</a>
+                                <ul class="btn-choose unstyled">
+                                    <li>
+										<#if is_sold_out>
+											<#--&lt;#&ndash;下架 ng-if=""&ndash;&gt;-->
+                                			<a  class="sui-btn  btn-danger addshopcar"  disabled="disabled">加入购物车</a>
+										<#else>
+											<a  class="sui-btn  btn-danger addshopcar" ng-click="addToCart()">加入购物车</a>
+										</#if>
 									</li>
 								</ul>
 							</div>

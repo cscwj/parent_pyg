@@ -258,6 +258,7 @@ public class GoodsServiceImpl implements GoodsService {
         goods.setAuditStatus(status);
         for (Long id : ids) {
             goods.setId(id);
+            goods.setIsMarketable("1");
             goodsDao.updateByPrimaryKeySelective(goods);
 
             //如果表全,会有审核通过上架状态,修改为别的状态,所以需要删除索引库,使用户查询不到,这里通过需要保存
@@ -292,5 +293,76 @@ public class GoodsServiceImpl implements GoodsService {
 
         }
 
+    }
+
+    //商品上架
+    @Override
+    public void upjia(Long[] ids) {
+        //遍历ids  循环查询商品是否可以上架
+        for (Long id : ids) {
+            Goods goods = goodsDao.selectByPrimaryKey(id);
+
+            //取出审核状态
+            String auditStatus = goods.getAuditStatus();
+            //取出上下架状态
+            String isMarketable = goods.getIsMarketable();
+
+            //已经上架的不能上架
+            if ("1".equals(isMarketable)){
+                // 添加商品上架状态 1 未上架  2已上架 更改页面显示  做判断 已上架的商品不能上架 已下架的商品不能下架
+                goods.setIsMarketable("2");
+                goodsDao.updateByPrimaryKeySelective(goods);
+                //审核通过  可以进行上架(1.生成页面  2.导入索引库)
+                if ("1".equals(auditStatus)) {
+                    jmsTemplate.send(topicPageAndSolrDestination, new MessageCreator() {
+                        @Override
+                        public Message createMessage(Session session) throws JMSException {
+                            return session.createTextMessage(String.valueOf(id));
+                        }
+                    });
+
+                }
+            }else {
+                throw new RuntimeException();
+            }
+
+        }
+    }
+
+    //商品下架
+    @Override
+    public void downjia(Long[] ids) {
+        //遍历ids  循环查询商品是否可以下架
+        for (Long id : ids) {
+            Goods goods = goodsDao.selectByPrimaryKey(id);
+
+
+            //取出审核状态
+            String auditStatus = goods.getAuditStatus();
+            //取出上下架状态
+            String isMarketable = goods.getIsMarketable();
+
+            //已经下架的不能下架
+            if ("2".equals(isMarketable)){
+
+                // 添加商品下架状态 1 未上架  2已上架 更改页面显示  做判断 已上架的商品不能上架 已下架的商品不能下架
+                goods.setIsMarketable("1");
+                goodsDao.updateByPrimaryKeySelective(goods);
+
+                //审核通过并且在上架状态  可以进行下架(1.删除页面  2.删除索引库)
+                if ("1".equals(auditStatus)) {
+                    jmsTemplate.send(queueSolrDeleteDestination, new MessageCreator() {
+                        @Override
+                        public Message createMessage(Session session) throws JMSException {
+                            return session.createTextMessage(String.valueOf(id));
+                        }
+                    });
+
+                }
+            }else {
+                throw new RuntimeException();
+            }
+
+        }
     }
 }

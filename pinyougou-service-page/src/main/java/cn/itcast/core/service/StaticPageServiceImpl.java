@@ -66,6 +66,58 @@ public class StaticPageServiceImpl implements StaticPageService,ServletContextAw
         root.put("itemCat1", itemCatDao.selectByPrimaryKey(goods.getCategory1Id()).getName());
         root.put("itemCat2", itemCatDao.selectByPrimaryKey(goods.getCategory2Id()).getName());
         root.put("itemCat3", itemCatDao.selectByPrimaryKey(goods.getCategory3Id()).getName());
+        root.put("is_sold_out",false);
+
+        //读写一致,解决乱码问题
+        Writer out = null;
+        try {
+            //读
+            Template template = conf.getTemplate("item.ftl");
+            //写
+            out = new OutputStreamWriter(new FileOutputStream(new File(allPath)), "UTF-8");
+            template.process(root, out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void delById(Long id) {
+        //bean标签,有目录地址,这里不需要,固定解决路径问题
+        Configuration conf = freeMarkerConfigurer.getConfiguration();
+        //输出路径
+        String allPath = getPath("/" + id + ".html");
+        //数据
+        Map<String, Object> root = new HashMap<>();
+
+        //商品详细
+        GoodsDesc goodsDesc = goodsDescDao.selectByPrimaryKey(id);
+        root.put("goodsDesc", goodsDesc);
+
+        //商品对象
+        Goods goods = goodsDao.selectByPrimaryKey(id);
+        root.put("goods", goods);
+
+        //库存对象
+        ItemQuery query=new ItemQuery();
+        query.createCriteria().andGoodsIdEqualTo(id).andStatusEqualTo("1");
+        List<Item> items = itemDao.selectByExample(query);
+        root.put("itemList",items );
+
+        //分类
+        root.put("itemCat1", itemCatDao.selectByPrimaryKey(goods.getCategory1Id()).getName());
+        root.put("itemCat2", itemCatDao.selectByPrimaryKey(goods.getCategory2Id()).getName());
+        root.put("itemCat3", itemCatDao.selectByPrimaryKey(goods.getCategory3Id()).getName());
+        root.put("is_sold_out",true);
 
 
         //读写一致,解决乱码问题
