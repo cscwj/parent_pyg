@@ -258,6 +258,7 @@ public class GoodsServiceImpl implements GoodsService {
         goods.setAuditStatus(status);
         for (Long id : ids) {
             goods.setId(id);
+            goods.setIsMarketable("1");
             goodsDao.updateByPrimaryKeySelective(goods);
 
             //如果表全,会有审核通过上架状态,修改为别的状态,所以需要删除索引库,使用户查询不到,这里通过需要保存
